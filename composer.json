@@ -1,0 +1,43 @@
+{
+  "name": "xcore/inline-editing-bundle",
+  "type": "library",
+  "description": "Content inline editable bundle for Symfony.",
+  "keywords": [
+    "symfony",
+    "xcore"
+  ],
+  "homepage": "https://appio.cz",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Jakub Janata",
+      "email": "jakubjanata@gmail.com"
+    }
+  ],
+  "require": {
+    "php": "^7.1",
+    "xcore/inline-editing": "^1.0",
+    "symfony/framework-bundle": "^3.2",
+    "twig/twig": "^2.0"
+  },
+  "require-dev": {
+    "doctrine/dbal": "^2.5",
+    "symfony/security": "^3.2",
+    "phpunit/phpunit": "^6.0",
+    "squizlabs/php_codesniffer": "^3.0",
+    "phpstan/phpstan": "@dev"
+  },
+  "suggest": {
+    "symfony/security": "If you wanna use default permission checker subscriber"
+  },
+  "autoload": {
+    "psr-4": {
+      "XcoreCMS\\InlineEditingBundle\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "XcoreCMS\\InlineEditingBundle\\Tests\\": "tests/"
+    }
+  }
+}
