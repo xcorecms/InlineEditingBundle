@@ -26,6 +26,7 @@ class XcoreCMSInlineEditingExtension extends Extension
         $container->setParameter('xcore_inline.fallback', $config['fallback']);
         $container->setParameter('xcore_inline.table_name', $config['table_name']);
         $container->setParameter('xcore_inline.url_path', $config['url_path']);
+        $container->setParameter('xcore_inline.connection', $config['connection']);
 
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');

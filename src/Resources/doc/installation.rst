@@ -140,6 +140,7 @@ Step 8: Full configuration (optional)
         fallback: 'en' #default false
         table_name: 'super_table' #default inline_content
         url_path: '/ok-go' #default /inline-editing
+        connection: 'doctrine.dbal.inline_connection' # default doctrine.dbal.default_connection
 ..
 
 

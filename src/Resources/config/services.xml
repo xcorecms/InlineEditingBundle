@@ -6,7 +6,7 @@
     <services>
         <service id="xcore_inline.persistence_layer" class="XcoreCMS\InlineEditing\Model\PersistenceLayer\Dbal">
             <argument>%xcore_inline.table_name%</argument>
-            <argument type="service" id="doctrine.dbal.default_connection"/>
+            <argument type="expression">service(parameter('xcore_inline.connection'))</argument>
         </service>
 
         <service id="xcore_inline.model.content_provider" class="XcoreCMS\InlineEditing\Model\ContentProvider">
@@ -17,8 +17,7 @@
             <argument type="service" id="xcore_inline.persistence_layer"/>
         </service>
 
-        <service id="xcore_inline.twig_extension" class="XcoreCMS\InlineEditingBundle\Twig\InlineEditingExtension"
-                 public="true">
+        <service id="xcore_inline.twig_extension" class="XcoreCMS\InlineEditingBundle\Twig\InlineEditingExtension" public="true">
             <tag name="twig.extension"/>
             <argument type="service" id="xcore_inline.model.content_provider"/>
             <argument type="service" id="event_dispatcher"/>
