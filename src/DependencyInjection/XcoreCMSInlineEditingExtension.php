@@ -6,6 +6,8 @@ namespace XcoreCMS\InlineEditingBundle\DependencyInjection;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
@@ -30,6 +32,21 @@ class XcoreCMSInlineEditingExtension extends Extension
 
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
+
+        $this->copyResourceDirectory();
+    }
+
+    /**
+     *
+     */
+    private function copyResourceDirectory(): void
+    {
+        $targetDir = __DIR__ . '/../Resources/public';
+        $originDir = __DIR__ . '/../../../inline-editing/client-side/dist';
+
+        $filesystem = new Filesystem;
+        $filesystem->mkdir($targetDir, 0777);
+        $filesystem->mirror($originDir, $targetDir);
     }
 
     /**
