@@ -141,6 +141,7 @@ Step 8: Full configuration (optional)
         table_name: 'super_table' #default inline_content
         url_path: '/ok-go' #default /inline-editing
         connection: 'doctrine.dbal.inline_connection' # default doctrine.dbal.default_connection
+        entity_manager: 'doctrine.orm.inline_entity_manager' # default doctrine.orm.entity_manager
 ..
 
 

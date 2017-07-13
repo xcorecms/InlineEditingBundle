@@ -3,17 +3,42 @@ declare(strict_types=1);
 
 namespace XcoreCMS\InlineEditingBundle\Controller;
 
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use XcoreCMS\InlineEditing\Model\ContentProvider;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use XcoreCMS\InlineEditingBundle\Event\CheckInlinePermissionEvent;
+use XcoreCMS\InlineEditingBundle\Model\EntityPersister;
 
 /**
  * @author Jakub Janata <jakubjanata@gmail.com>
  */
-class InlineEditingController extends Controller
+class InlineEditingController
 {
+    /** @var ContentProvider */
+    private $contentProvider;
+
+    /** @var EventDispatcherInterface */
+    private $eventDispatcher;
+
+    /** @var EntityPersister */
+    private $entityPersister;
+
+    /**
+     * @param ContentProvider $contentProvider
+     * @param EventDispatcherInterface $eventDispatcher
+     * @param EntityPersister $entityPersister
+     */
+    public function __construct(
+        ContentProvider $contentProvider,
+        EventDispatcherInterface $eventDispatcher,
+        EntityPersister $entityPersister
+    ) {
+        $this->contentProvider = $contentProvider;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->entityPersister = $entityPersister;
+    }
+
     /**
      * @param Request $request
      * @return Response
@@ -21,7 +46,7 @@ class InlineEditingController extends Controller
     public function updateAction(Request $request): Response
     {
         /** @var CheckInlinePermissionEvent $event */
-        $event = $this->get('event_dispatcher')->dispatch(
+        $event = $this->eventDispatcher->dispatch(
             CheckInlinePermissionEvent::CHECK,
             new CheckInlinePermissionEvent
         );
@@ -32,17 +57,30 @@ class InlineEditingController extends Controller
 
         $data = json_decode($request->getContent()) ?: [];
 
-        /** @var ContentProvider $contentProvider */
-        $contentProvider = $this->get('xcore_inline.model.content_provider');
-
         foreach ($data as $item) {
-            $contentProvider->saveContent(
-                $item->namespace ?? '',
-                $item->locale ?? '',
-                $item->name ?? '',
-                $item->content ?? ''
-            );
+            switch ($item->type ?? null) {
+                case 'simple':
+                    $this->contentProvider->saveContent(
+                        $item->namespace ?? '',
+                        $item->locale ?? '',
+                        $item->name ?? '',
+                        $item->content ?? ''
+                    );
+                    break;
+                case 'entity':
+                    $this->entityPersister->update(
+                        $item->entity,
+                        $item->id,
+                        $item->property,
+                        $item->content
+                    );
+                    break;
+                default:
+                    return new Response('', 400);
+            }
         }
+
+        $this->entityPersister->flush();
 
         return new Response;
     }

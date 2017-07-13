@@ -20,6 +20,10 @@ Examples
 
 Warning!!! There's no XSS protection. Admin can add XSS and so on...
 
+
+Simple
+``````
+
 .. code-block:: twig
 
     {# basic usage - generate div tag #}
@@ -45,6 +49,43 @@ Warning!!! There's no XSS protection. Admin can add XSS and so on...
         {{ inline('using-global-namespace') }}
     {% end_inline_namespace %}
 
-    {# using namespace - don't forget add this line to end of body!!!  #}
+    {# include js+css files - don't forget add this line to end of body!!!  #}
+    {{ inline_source() }}
+..
+
+
+Entity
+``````
+
+.. code-block:: php
+
+    class TestController extends Controller
+    {
+        ...
+
+        public function index()
+        {
+            return $this->render('index.html.twig', [
+                'testEntity' => $this->testRepository->find(1),
+                'testEntity2' => $this->testRepository->find(2),
+            ]);
+        }
+    }
+
+..
+
+.. code-block:: twig
+
+    {# basic usage - generate div tag #}
+    {{ inline_entity(testEntity, 'title') }}
+
+    {{ inline_entity_div(testEntity, 'content') }}
+
+    {% inline_entity testEntity2 %}
+        {{ inline_field('name') }}
+        {{ inline_field('content') }}
+    {% end_inline_entity %}
+
+    {# include js+css files - don't forget add this line to end of body!!!  #}
     {{ inline_source() }}
 ..

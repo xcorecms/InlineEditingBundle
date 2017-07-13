@@ -7,7 +7,6 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
@@ -16,9 +15,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 class XcoreCMSInlineEditingExtension extends Extension
 {
     /**
-     * @param array $configs An array of configuration values
-     * @param ContainerBuilder $container A ContainerBuilder instance
-     * @throws \InvalidArgumentException When provided tag is not defined in this extension
+     * {@inheritdoc}
      */
     public function load(array $configs, ContainerBuilder $container): void
     {
@@ -29,6 +26,7 @@ class XcoreCMSInlineEditingExtension extends Extension
         $container->setParameter('xcore_inline.table_name', $config['table_name']);
         $container->setParameter('xcore_inline.url_path', $config['url_path']);
         $container->setParameter('xcore_inline.connection', $config['connection']);
+        $container->setParameter('xcore_inline.entity_manager', $config['entity_manager']);
 
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
@@ -45,7 +43,7 @@ class XcoreCMSInlineEditingExtension extends Extension
         $originDir = __DIR__ . '/../../../inline-editing/client-side/dist';
 
         $filesystem = new Filesystem;
-        $filesystem->mkdir($targetDir, 0777);
+        $filesystem->mkdir($targetDir);
         $filesystem->mirror($originDir, $targetDir);
     }
 

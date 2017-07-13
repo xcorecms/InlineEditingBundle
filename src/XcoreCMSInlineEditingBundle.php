@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace XcoreCMS\InlineEditingBundle;
 
+use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
@@ -11,9 +12,9 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 class XcoreCMSInlineEditingBundle extends Bundle
 {
     /**
-     * @return null|\Symfony\Component\DependencyInjection\Extension\ExtensionInterface
+     * {@inheritdoc}
      */
-    public function getContainerExtension()
+    public function getContainerExtension(): ?ExtensionInterface
     {
         if ($this->extension === null) {
             $this->extension = $this->createContainerExtension();

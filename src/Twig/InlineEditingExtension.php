@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace XcoreCMS\InlineEditingBundle\Twig;
 
+use Symfony\Component\PropertyAccess\PropertyAccessor;
+use Twig_SimpleFunction;
 use XcoreCMS\InlineEditing\Model\ContentProvider;
 use XcoreCMS\InlineEditingBundle\Event\CheckInlinePermissionEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -29,6 +31,11 @@ class InlineEditingExtension extends \Twig_Extension
     private $router;
 
     /**
+     * @var PropertyAccessor
+     */
+    private $propertyAccessor;
+
+    /**
      * @var bool|null
      */
     private $editationAllowed;
@@ -53,22 +60,20 @@ class InlineEditingExtension extends \Twig_Extension
      */
     public function getFunctions(): array
     {
+        $fullOptions = ['is_safe' => ['html'], 'needs_context' => true];
+
         return [
-            'inline' => new \Twig_SimpleFunction(
-                'inline',
-                [$this, 'editableItem'],
-                ['is_safe' => ['html'], 'needs_context' => true]
-            ),
-            'inline_dynamic' => new \Twig_SimpleFunction(
-                'inline_*',
-                [$this, 'editableItemDynamic'],
-                ['is_safe' => ['html'], 'needs_context' => true]
-            ),
-            'inline_source' => new \Twig_SimpleFunction(
-                'inline_source',
-                [$this, 'editableSource'],
-                ['is_safe' => ['html']]
-            ),
+            // entity
+            new Twig_SimpleFunction('inline_entity', [$this, 'editableEntity'], ['is_safe' => ['html']]),
+            new Twig_SimpleFunction('inline_entity_*', [$this, 'editableEntityDynamic'], ['is_safe' => ['html']]),
+            // entity field
+            new Twig_SimpleFunction('inline_field', [$this, 'editableEntityField'], $fullOptions),
+            new Twig_SimpleFunction('inline_field_*', [$this, 'editableEntityFieldDynamic'], $fullOptions),
+            // simple
+            new Twig_SimpleFunction('inline', [$this, 'editableItem'], $fullOptions),
+            new Twig_SimpleFunction('inline_*', [$this, 'editableItemDynamic'], $fullOptions),
+            // source
+            new Twig_SimpleFunction('inline_source', [$this, 'editableSource'], ['is_safe' => ['html']]),
         ];
     }
 
@@ -77,19 +82,79 @@ class InlineEditingExtension extends \Twig_Extension
      */
     public function getTokenParsers(): array
     {
-        return ['inline_namespace' => new InlineEditingNamespaceTokenParser];
+        return [new InlineEditingNamespaceTokenParser, new InlineEditingEntityTokenParser];
     }
 
     /**
+     * @param $entity
+     * @param string $property
+     * @param array $attr
      * @return string
      */
-    public function editableSource(): string
+    public function editableEntity($entity, string $property, array $attr = []): string
     {
-        return $this->isEditationAllowed() ?
-            "<script src=\"/bundles/xcorecmsinlineediting/inline.js\" id=\"inline-editing-source\"
-            data-source-css=\"/bundles/xcorecmsinlineediting/inline.css\"
-            data-source-tinymce-js=\"/bundles/xcorecmsinlineediting/tinymce/tinymce.min.js\"
-            data-source-gateway-url=\"{$this->router->generate('inline_editing')}\"></script>" : '';
+        return $this->editableEntityDynamic('span', $entity, $property, $attr);
+    }
+
+    /**
+     * @param string $elementTag
+     * @param mixed $entity
+     * @param string $property
+     * @param array $attr
+     * @return string
+     * @throws \Twig_Error
+     */
+    protected function editableEntityDynamic(string $elementTag, $entity, string $property, array $attr = []): string
+    {
+        if (!in_array($elementTag, ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'span', 'strong', 'div'], true)) {
+            throw new \Twig_Error("This tag '$elementTag' isn't allowed");
+        }
+
+        $accessor = $this->getPropertyAccessor();
+
+        $class = get_class($entity);
+        $id = $accessor->getValue($entity, 'id');
+        $content = $accessor->getValue($entity, $property);
+
+        $attrs = $attr['attr'] ?? [];
+        $htmlAttrs = implode(' ', array_map(function ($v, $n) {
+            return sprintf('%s="%s"', $n, $v);
+        }, $attrs, array_keys($attrs)));
+
+        return "<$elementTag $htmlAttrs " .
+            ($this->isEditationAllowed() ?
+                "data-inline-type=\"entity\" data-inline-entity=\"$class\" " .
+                "data-inline-id=\"$id\" data-inline-property=\"$property\"" :
+                ''
+            ) . ">{$content}</$elementTag>";
+    }
+
+    /**
+     * @param array $context
+     * @param string $property
+     * @param array $attr
+     * @return string
+     */
+    public function editableEntityField(array $context, string $property, array $attr = []): string
+    {
+        return $this->editableEntityDynamic('span', $context['_inline_entity'], $property, $attr);
+    }
+
+
+    /**
+     * @param array $context
+     * @param string $elementTag
+     * @param string $property
+     * @param array $attr
+     * @return string
+     */
+    public function editableEntityFieldDynamic(
+        array $context,
+        string $elementTag,
+        string $property,
+        array $attr = []
+    ): string {
+        return $this->editableEntityDynamic($elementTag, $context['_inline_entity'], $property, $attr);
     }
 
     /**
@@ -125,6 +190,18 @@ class InlineEditingExtension extends \Twig_Extension
     }
 
     /**
+     * @return string
+     */
+    public function editableSource(): string
+    {
+        return $this->isEditationAllowed() ?
+            "<script src=\"/bundles/xcorecmsinlineediting/inline.js\" id=\"inline-editing-source\"
+            data-source-css=\"/bundles/xcorecmsinlineediting/inline.css\"
+            data-source-tinymce-js=\"/bundles/xcorecmsinlineediting/tinymce/tinymce.min.js\"
+            data-source-gateway-url=\"{$this->router->generate('inline_editing')}\"></script>" : '';
+    }
+
+    /**
      * @param array $context
      * @param string $elementTag
      * @param string $name
@@ -144,7 +221,8 @@ class InlineEditingExtension extends \Twig_Extension
 
         return "<$elementTag $htmlAttrs " .
             ($this->isEditationAllowed() ?
-                "data-inline-name=\"$name\" data-inline-namespace=\"$namespace\" data-inline-locale=\"$locale\"" :
+                "data-inline-type=\"simple\" data-inline-name=\"$name\" " .
+                "data-inline-namespace=\"$namespace\" data-inline-locale=\"$locale\"" :
                 ''
             ) . ">{$content}</$elementTag>";
     }
@@ -161,5 +239,13 @@ class InlineEditingExtension extends \Twig_Extension
         }
 
         return $this->editationAllowed;
+    }
+
+    /**
+     * @return PropertyAccessor
+     */
+    private function getPropertyAccessor(): PropertyAccessor
+    {
+        return $this->propertyAccessor = $this->propertyAccessor ?? new PropertyAccessor;
     }
 }

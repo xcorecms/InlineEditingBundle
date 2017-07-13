@@ -25,6 +25,7 @@ class Configuration implements ConfigurationInterface
             ->scalarNode('table_name')->defaultValue('inline_content')->end()
             ->scalarNode('url_path')->defaultValue('/inline-editing')->end()
             ->scalarNode('connection')->defaultValue('doctrine.dbal.default_connection')->end()
+            ->scalarNode('entity_manager')->defaultValue('doctrine.orm.entity_manager')->end()
             ->end();
 
         return $treeBuilder;

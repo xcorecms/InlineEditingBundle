@@ -17,12 +17,18 @@
             <argument type="service" id="xcore_inline.persistence_layer"/>
         </service>
 
+        <service id="xcore_inline.model.entity_persister" class="XcoreCMS\InlineEditingBundle\Model\EntityPersister">
+            <argument type="expression">service(parameter('xcore_inline.entity_manager'))</argument>
+        </service>
+
         <service id="xcore_inline.twig_extension" class="XcoreCMS\InlineEditingBundle\Twig\InlineEditingExtension" public="true">
             <tag name="twig.extension"/>
             <argument type="service" id="xcore_inline.model.content_provider"/>
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="router"/>
         </service>
+
+        <service id="XcoreCMS\InlineEditingBundle\Controller\InlineEditingController" autowire="true" />
     </services>
 
 </container>
