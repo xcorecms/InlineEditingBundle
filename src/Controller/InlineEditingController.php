@@ -4,11 +4,13 @@ declare(strict_types=1);
 namespace XcoreCMS\InlineEditingBundle\Controller;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use XcoreCMS\InlineEditing\Model\ContentProvider;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use XcoreCMS\InlineEditing\Model\Entity\EntityPersister;
+use XcoreCMS\InlineEditing\Model\Entity\HtmlEntityElement\Element;
+use XcoreCMS\InlineEditing\Model\Simple\ContentProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use XcoreCMS\InlineEditingBundle\Event\CheckInlinePermissionEvent;
-use XcoreCMS\InlineEditingBundle\Model\EntityPersister;
 
 /**
  * @author Jakub Janata <jakubjanata@gmail.com>
@@ -52,36 +54,51 @@ class InlineEditingController
         );
 
         if ($event->isAllowed() === false) {
-            return new Response('', 403);
+            return new JsonResponse([], 403);
         }
 
-        $data = json_decode($request->getContent()) ?: [];
+        $data = json_decode($request->getContent(), true) ?: [];
 
-        foreach ($data as $item) {
-            switch ($item->type ?? null) {
-                case 'simple':
-                    $this->contentProvider->saveContent(
-                        $item->namespace ?? '',
-                        $item->locale ?? '',
-                        $item->name ?? '',
-                        $item->content ?? ''
-                    );
-                    break;
-                case 'entity':
-                    $this->entityPersister->update(
-                        $item->entity,
-                        $item->id,
-                        $item->property,
-                        $item->content
-                    );
-                    break;
-                default:
-                    return new Response('', 400);
+        $payload = [];
+
+        foreach ($data as $elementId => $item) {
+            $type = $item['type'] ?? null;
+            if ($type === 'simple') {
+                $this->processSimple($item);
+                $payload[$elementId] = ['status' => 0];
+            } elseif ($type === 'entity' || $type === 'entity-specific') {
+                $this->processEntity($item);
             }
         }
 
-        $this->entityPersister->flush();
+        $container = $this->entityPersister->flush();
+        $payload = array_merge($payload, $container->generateResponse());
 
-        return new Response;
+        return new JsonResponse($payload, $container->isValid() === true ? 200 : 400);
+    }
+
+
+    /**
+     * @param array $item
+     */
+    protected function processSimple(array $item): void
+    {
+        if (!isset($item['namespace'], $item['locale'], $item['name'], $item['content'])) {
+            return;
+        }
+
+        $this->contentProvider->saveContent($item['namespace'], $item['locale'], $item['name'], $item['content']);
+    }
+
+    /**
+     * @param array $item
+     */
+    protected function processEntity(array $item): void
+    {
+        if (!isset($item['entity'], $item['id'], $item['property'], $item['content'])) {
+            return;
+        }
+
+        $this->entityPersister->update(new Element($item['entity'], $item['id'], $item['property'], $item['content']));
     }
 }

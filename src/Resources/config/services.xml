@@ -4,12 +4,12 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="xcore_inline.persistence_layer" class="XcoreCMS\InlineEditing\Model\PersistenceLayer\Dbal">
+        <service id="xcore_inline.persistence_layer" class="XcoreCMS\InlineEditing\Model\Simple\PersistenceLayer\Dbal">
             <argument>%xcore_inline.table_name%</argument>
             <argument type="expression">service(parameter('xcore_inline.connection'))</argument>
         </service>
 
-        <service id="xcore_inline.model.content_provider" class="XcoreCMS\InlineEditing\Model\ContentProvider">
+        <service id="xcore_inline.model.content_provider" class="XcoreCMS\InlineEditing\Model\Simple\ContentProvider">
             <argument type="collection">
                 <argument key="fallback">%xcore_inline.fallback%</argument>
             </argument>
@@ -17,8 +17,9 @@
             <argument type="service" id="xcore_inline.persistence_layer"/>
         </service>
 
-        <service id="xcore_inline.model.entity_persister" class="XcoreCMS\InlineEditingBundle\Model\EntityPersister">
+        <service id="xcore_inline.model.entity_persister" class="XcoreCMS\InlineEditing\Model\Entity\EntityPersister">
             <argument type="expression">service(parameter('xcore_inline.entity_manager'))</argument>
+            <argument type="service" id="validator"/>
         </service>
 
         <service id="xcore_inline.twig_extension" class="XcoreCMS\InlineEditingBundle\Twig\InlineEditingExtension" public="true">

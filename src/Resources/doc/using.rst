@@ -66,8 +66,8 @@ Entity
         public function index()
         {
             return $this->render('index.html.twig', [
-                'testEntity' => $this->testRepository->find(1),
-                'testEntity2' => $this->testRepository->find(2),
+                'feed' => $this->testRepository->find(1),
+                'feed2' => $this->testRepository->find(2),
             ]);
         }
     }
@@ -76,16 +76,30 @@ Entity
 
 .. code-block:: twig
 
-    {# basic usage - generate div tag #}
-    {{ inline_entity(testEntity, 'title') }}
-
-    {{ inline_entity_div(testEntity, 'content') }}
-
-    {% inline_entity testEntity2 %}
-        {{ inline_field('name') }}
-        {{ inline_field('content') }}
+    {# with entity container #}
+    {% inline_entity feed %}
+        {# h2 without wysiwyg #}
+        {{ inline_field_h2('title') }}
+        {# default span without wysiwyg #}
+        {{ inline_field('perex') }}
+        {# default div with wysiwyg #}
+        {{ inline_field_html('content') }}
+        {# strong with wysiwyg #}
+        {{ inline_field_html_strong('info') }}
     {% end_inline_entity %}
+
+    {# without entity container #}
+    {# h2 without wysiwyg #}
+    {{ inline_entity_h2(feed, 'title') }}
+    {# default span without wysiwyg #}
+    {{ inline_entity(feed, 'perex') }}
+    {# default div with wysiwyg #}
+    {{ inline_entity_html(feed, 'content') }}
+    {# strong with wysiwyg #}
+    {{ inline_entity_html_strong(feed, 'info') }}
 
     {# include js+css files - don't forget add this line to end of body!!!  #}
     {{ inline_source() }}
 ..
+
+`More info about entities <https://github.com/XcoreCMS/InlineEditingBundle/blob/master/src/Resources/doc/entity.rst>`_
