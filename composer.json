@@ -18,13 +18,14 @@
     "php": "^7.1",
     "doctrine/orm": "^2.5",
     "xcore/inline-editing": "~1.2.0",
-    "symfony/framework-bundle": "^3.3",
-    "symfony/expression-language": "^3.3",
-    "symfony/validator": "^3.3",
+    "symfony/framework-bundle": "^4.0",
+    "symfony/expression-language": "^4.0",
+    "symfony/validator": "^4.0",
+    "symfony/property-access": "^4.0",
     "twig/twig": "^2.0"
   },
   "require-dev": {
-    "symfony/security": "^3.3",
+    "symfony/security": "^4.0",
     "phpunit/phpunit": "^6.0",
     "squizlabs/php_codesniffer": "^3.0",
     "phpstan/phpstan": "@dev"

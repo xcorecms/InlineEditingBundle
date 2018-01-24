@@ -4,32 +4,33 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="xcore_inline.persistence_layer" class="XcoreCMS\InlineEditing\Model\Simple\PersistenceLayer\Dbal">
+        <service id="XcoreCMS\InlineEditing\Model\Simple\PersistenceLayer\Dbal">
             <argument>%xcore_inline.table_name%</argument>
             <argument type="expression">service(parameter('xcore_inline.connection'))</argument>
         </service>
+        <service id="XcoreCMS\InlineEditing\Model\Simple\PersistenceLayerInterface" alias="XcoreCMS\InlineEditing\Model\Simple\PersistenceLayer\Dbal"/>
 
-        <service id="xcore_inline.model.content_provider" class="XcoreCMS\InlineEditing\Model\Simple\ContentProvider">
+        <service id="XcoreCMS\InlineEditing\Model\Simple\ContentProvider" autowire="true">
             <argument type="collection">
                 <argument key="fallback">%xcore_inline.fallback%</argument>
             </argument>
-            <argument type="service" id="cache.app"/>
-            <argument type="service" id="xcore_inline.persistence_layer"/>
         </service>
 
-        <service id="xcore_inline.model.entity_persister" class="XcoreCMS\InlineEditing\Model\Entity\EntityPersister">
+        <service id="XcoreCMS\InlineEditing\Model\Entity\EntityPersister">
             <argument type="expression">service(parameter('xcore_inline.entity_manager'))</argument>
             <argument type="service" id="validator"/>
         </service>
 
-        <service id="xcore_inline.twig_extension" class="XcoreCMS\InlineEditingBundle\Twig\InlineEditingExtension" public="true">
+        <service id="XcoreCMS\InlineEditingBundle\Twig\InlineEditingExtension" public="true">
             <tag name="twig.extension"/>
-            <argument type="service" id="xcore_inline.model.content_provider"/>
+            <argument type="service" id="XcoreCMS\InlineEditing\Model\Simple\ContentProvider"/>
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="router"/>
         </service>
 
-        <service id="XcoreCMS\InlineEditingBundle\Controller\InlineEditingController" autowire="true" />
+        <service id="XcoreCMS\InlineEditingBundle\Controller\InlineEditingController" autowire="true">
+            <tag name="controller.service_arguments"></tag>
+        </service>
     </services>
 
 </container>
