@@ -18,10 +18,10 @@
     "php": "^7.1",
     "doctrine/orm": "^2.5",
     "xcore/inline-editing": "~1.2.0",
-    "symfony/framework-bundle": "^4.0",
-    "symfony/expression-language": "^4.0",
-    "symfony/validator": "^4.0",
-    "symfony/property-access": "^4.0",
+    "symfony/framework-bundle": "^3.4|^4.0",
+    "symfony/expression-language": "^3.4|^4.0",
+    "symfony/validator": "^3.4|^4.0",
+    "symfony/property-access": "^3.4|^4.0",
     "twig/twig": "^2.0"
   },
   "require-dev": {
