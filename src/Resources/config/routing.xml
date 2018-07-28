@@ -6,6 +6,6 @@
         http://symfony.com/schema/routing/routing-1.0.xsd">
 
     <route id="inline_editing" path="%xcore_inline.url_path%" methods="POST">
-        <default key="_controller">XcoreCMSInlineEditingBundle:InlineEditing:update</default>
+        <default key="_controller">XcoreCMS\InlineEditingBundle\Controller\InlineEditingController::updateAction</default>
     </route>
 </routes>

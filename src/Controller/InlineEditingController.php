@@ -57,7 +57,7 @@ class InlineEditingController
             return new JsonResponse([], 403);
         }
 
-        $data = json_decode($request->getContent(), true) ?: [];
+        $data = json_decode((string) $request->getContent(), true) ?: [];
 
         $payload = [];
 

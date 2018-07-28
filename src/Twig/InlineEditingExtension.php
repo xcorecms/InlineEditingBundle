@@ -15,29 +15,19 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class InlineEditingExtension extends \Twig_Extension
 {
-    /**
-     * @var ContentProvider
-     */
+    /** @var ContentProvider */
     private $contentProvider;
 
-    /**
-     * @var EventDispatcherInterface
-     */
+    /** @var EventDispatcherInterface */
     private $dispatcher;
 
-    /**
-     * @var RouterInterface
-     */
+    /** @var RouterInterface */
     private $router;
 
-    /**
-     * @var PropertyAccessor
-     */
+    /** @var PropertyAccessor */
     private $propertyAccessor;
 
-    /**
-     * @var bool|null
-     */
+    /** @var bool|null */
     private $editationAllowed;
 
     /**
@@ -56,7 +46,7 @@ class InlineEditingExtension extends \Twig_Extension
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getFunctions(): array
     {
@@ -75,7 +65,7 @@ class InlineEditingExtension extends \Twig_Extension
             new Twig_SimpleFunction('inline_field_*', [$this, 'editableEntityFieldDynamic'], $fullOptions),
             // entity field
             new Twig_SimpleFunction('inline_field_html', [$this, 'editableEntityHtmlField'], $fullOptions),
-            new Twig_SimpleFunction('inline_field_html_*', [$this, 'editableEntityFieldHtmlDynamic'], $fullOptions),
+            new Twig_SimpleFunction('inline_field_html_*', [$this, 'editableEntityHtmlFieldDynamic'], $fullOptions),
             // simple
             new Twig_SimpleFunction('inline', [$this, 'editableItem'], $fullOptions),
             new Twig_SimpleFunction('inline_*', [$this, 'editableItemDynamic'], $fullOptions),
@@ -85,7 +75,7 @@ class InlineEditingExtension extends \Twig_Extension
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getTokenParsers(): array
     {
@@ -95,7 +85,7 @@ class InlineEditingExtension extends \Twig_Extension
     /* ==== ENTITY ==== */
 
     /**
-     * @param $entity
+     * @param mixed $entity
      * @param string $property
      * @param array $attr
      * @return string
@@ -149,7 +139,7 @@ class InlineEditingExtension extends \Twig_Extension
     }
 
     /**
-     * @param $entity
+     * @param mixed $entity
      * @param string $property
      * @param array $attr
      * @return string
@@ -161,7 +151,7 @@ class InlineEditingExtension extends \Twig_Extension
 
     /**
      * @param string $elementTag
-     * @param $entity
+     * @param mixed $entity
      * @param string $property
      * @param array $attr
      * @return string
