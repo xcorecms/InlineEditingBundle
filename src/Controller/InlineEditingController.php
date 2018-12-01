@@ -50,7 +50,7 @@ class InlineEditingController
         /** @var CheckInlinePermissionEvent $event */
         $event = $this->eventDispatcher->dispatch(
             CheckInlinePermissionEvent::CHECK,
-            new CheckInlinePermissionEvent
+            new CheckInlinePermissionEvent()
         );
 
         if ($event->isAllowed() === false) {

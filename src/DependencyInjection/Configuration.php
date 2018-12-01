@@ -17,7 +17,7 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder;
+        $treeBuilder = new TreeBuilder();
 
         /** @var ArrayNodeDefinition $rootNode */
         $rootNode = $treeBuilder->root('xcore_inline');

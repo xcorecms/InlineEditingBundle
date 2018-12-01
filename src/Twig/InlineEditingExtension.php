@@ -79,7 +79,7 @@ class InlineEditingExtension extends \Twig_Extension
      */
     public function getTokenParsers(): array
     {
-        return [new InlineEditingNamespaceTokenParser, new InlineEditingEntityTokenParser];
+        return [new InlineEditingNamespaceTokenParser(), new InlineEditingEntityTokenParser()];
     }
 
     /* ==== ENTITY ==== */
@@ -296,7 +296,7 @@ class InlineEditingExtension extends \Twig_Extension
     {
         if ($this->editationAllowed === null) {
             /** @var CheckInlinePermissionEvent $event */
-            $event = $this->dispatcher->dispatch(CheckInlinePermissionEvent::CHECK, new CheckInlinePermissionEvent);
+            $event = $this->dispatcher->dispatch(CheckInlinePermissionEvent::CHECK, new CheckInlinePermissionEvent());
             $this->editationAllowed = $event->isAllowed();
         }
 
@@ -308,6 +308,6 @@ class InlineEditingExtension extends \Twig_Extension
      */
     private function getPropertyAccessor(): PropertyAccessor
     {
-        return $this->propertyAccessor = $this->propertyAccessor ?? new PropertyAccessor;
+        return $this->propertyAccessor = $this->propertyAccessor ?? new PropertyAccessor();
     }
 }

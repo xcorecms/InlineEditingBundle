@@ -12,7 +12,7 @@ install:
 
 script:
     - php vendor/bin/phpstan analyse ./src --level 7
-    - php vendor/bin/phpcs --standard=PSR2 --ignore=./src/Resources  ./src
+    - php vendor/bin/phpcs --standard=PSR12 --ignore=./src/Resources ./src
     - phpunit --coverage-clover coverage.xml
 
 after_script:

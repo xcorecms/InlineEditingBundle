@@ -42,7 +42,7 @@ class XcoreCMSInlineEditingExtension extends Extension
         $targetDir = __DIR__ . '/../Resources/public';
         $originDir = __DIR__ . '/../../../inline-editing/client-side/dist';
 
-        $filesystem = new Filesystem;
+        $filesystem = new Filesystem();
         $filesystem->mkdir($targetDir);
         $filesystem->mirror($originDir, $targetDir);
     }
