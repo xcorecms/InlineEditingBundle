@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace XcoreCMS\InlineEditingBundle\Twig;
 
 use Symfony\Component\PropertyAccess\PropertyAccessor;
-use Twig_SimpleFunction;
+use Twig\Error\Error;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 use XcoreCMS\InlineEditing\Model\Simple\ContentProvider;
 use XcoreCMS\InlineEditingBundle\Event\CheckInlinePermissionEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -13,7 +15,7 @@ use Symfony\Component\Routing\RouterInterface;
 /**
  * @author Jakub Janata <jakubjanata@gmail.com>
  */
-class InlineEditingExtension extends \Twig_Extension
+class InlineEditingExtension extends AbstractExtension
 {
     /** @var ContentProvider */
     private $contentProvider;
@@ -55,22 +57,22 @@ class InlineEditingExtension extends \Twig_Extension
 
         return [
             // entity
-            new Twig_SimpleFunction('inline_entity', [$this, 'editableEntity'], $htmlOptions),
-            new Twig_SimpleFunction('inline_entity_*', [$this, 'editableEntityDynamic'], $htmlOptions),
+            new TwigFunction('inline_entity', [$this, 'editableEntity'], $htmlOptions),
+            new TwigFunction('inline_entity_*', [$this, 'editableEntityDynamic'], $htmlOptions),
             // entity html
-            new Twig_SimpleFunction('inline_entity_html', [$this, 'editableEntityHtml'], $htmlOptions),
-            new Twig_SimpleFunction('inline_entity_html_*', [$this, 'editableEntityHtmlDynamic'], $htmlOptions),
+            new TwigFunction('inline_entity_html', [$this, 'editableEntityHtml'], $htmlOptions),
+            new TwigFunction('inline_entity_html_*', [$this, 'editableEntityHtmlDynamic'], $htmlOptions),
             // entity field
-            new Twig_SimpleFunction('inline_field', [$this, 'editableEntityField'], $fullOptions),
-            new Twig_SimpleFunction('inline_field_*', [$this, 'editableEntityFieldDynamic'], $fullOptions),
+            new TwigFunction('inline_field', [$this, 'editableEntityField'], $fullOptions),
+            new TwigFunction('inline_field_*', [$this, 'editableEntityFieldDynamic'], $fullOptions),
             // entity field
-            new Twig_SimpleFunction('inline_field_html', [$this, 'editableEntityHtmlField'], $fullOptions),
-            new Twig_SimpleFunction('inline_field_html_*', [$this, 'editableEntityHtmlFieldDynamic'], $fullOptions),
+            new TwigFunction('inline_field_html', [$this, 'editableEntityHtmlField'], $fullOptions),
+            new TwigFunction('inline_field_html_*', [$this, 'editableEntityHtmlFieldDynamic'], $fullOptions),
             // simple
-            new Twig_SimpleFunction('inline', [$this, 'editableItem'], $fullOptions),
-            new Twig_SimpleFunction('inline_*', [$this, 'editableItemDynamic'], $fullOptions),
+            new TwigFunction('inline', [$this, 'editableItem'], $fullOptions),
+            new TwigFunction('inline_*', [$this, 'editableItemDynamic'], $fullOptions),
             // source
-            new Twig_SimpleFunction('inline_source', [$this, 'editableSource'], $htmlOptions),
+            new TwigFunction('inline_source', [$this, 'editableSource'], $htmlOptions),
         ];
     }
 
@@ -103,7 +105,7 @@ class InlineEditingExtension extends \Twig_Extension
      * @param array $attr
      * @param bool $specific
      * @return string
-     * @throws \Twig_Error
+     * @throws Error
      */
     public function editableEntityDynamic(
         string $elementTag,
@@ -114,7 +116,7 @@ class InlineEditingExtension extends \Twig_Extension
     ): string {
         if ($specific === false &&
             !in_array($elementTag, ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'span', 'strong', 'div'], true)) {
-            throw new \Twig_Error("This tag '$elementTag' isn't allowed");
+            throw new Error("This tag '$elementTag' isn't allowed");
         }
 
         $accessor = $this->getPropertyAccessor();
@@ -125,7 +127,7 @@ class InlineEditingExtension extends \Twig_Extension
         $content = $accessor->getValue($entity, $property);
 
         $attrs = $attr['attr'] ?? [];
-        $htmlAttrs = implode(' ', array_map(function ($v, $n) {
+        $htmlAttrs = implode(' ', array_map(static function ($v, $n) {
             return sprintf('%s="%s"', $n, $v);
         }, $attrs, array_keys($attrs)));
 
@@ -234,16 +236,16 @@ class InlineEditingExtension extends \Twig_Extension
      * @param string $name
      * @param array $attr
      * @return string
-     * @throws \Twig_Error
+     * @throws Error
      */
     public function editableItemDynamic(array $context, string $elementTag, string $name, array $attr = []): string
     {
         if (!in_array($elementTag, ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'span', 'strong', 'a', 'div'], true)) {
-            throw new \Twig_Error("This tag '$elementTag' isn't allowed");
+            throw new Error("This tag '$elementTag' isn't allowed");
         }
 
         if ($elementTag === 'a' && empty($attr['attr']['href'])) {
-            throw new \Twig_Error("You try use 'a' tag without href. Please specify href by {attr:{href:'link'}}");
+            throw new Error("You try use 'a' tag without href. Please specify href by {attr:{href:'link'}}");
         }
 
         return $this->getHtmlContent($context, $elementTag, $name, $attr);

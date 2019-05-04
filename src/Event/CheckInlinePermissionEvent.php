@@ -13,7 +13,7 @@ class CheckInlinePermissionEvent extends Event
     /**
      * Event name (for dispatching)
      */
-    const CHECK = 'inline_permission_check';
+    public const CHECK = 'inline_permission_check';
 
     /**
      * @var bool

@@ -1,4 +1,5 @@
 /vendor
 /.idea
 /src/Resources/public
+/var
 /composer.lock

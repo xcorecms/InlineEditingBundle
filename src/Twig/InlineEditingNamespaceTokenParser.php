@@ -3,28 +3,29 @@ declare(strict_types=1);
 
 namespace XcoreCMS\InlineEditingBundle\Twig;
 
-use Twig_Token;
+use Twig\Token;
+use Twig\TokenParser\AbstractTokenParser;
 
 /**
  * @author Jakub Janata <jakubjanata@gmail.com>
  */
-class InlineEditingNamespaceTokenParser extends \Twig_TokenParser
+class InlineEditingNamespaceTokenParser extends AbstractTokenParser
 {
     /**
-     * @param Twig_Token $token
+     * @param Token $token
      * @return InlineEditingNamespaceNode
      */
-    public function parse(Twig_Token $token): InlineEditingNamespaceNode
+    public function parse(Token $token): InlineEditingNamespaceNode
     {
         $stream = $this->parser->getStream();
 
-        $namespace = $stream->expect(Twig_Token::NAME_TYPE)->getValue();
+        $namespace = $stream->expect(Token::NAME_TYPE)->getValue();
 
-        $stream->expect(Twig_Token::BLOCK_END_TYPE);
+        $stream->expect(Token::BLOCK_END_TYPE);
 
         $body = $this->parser->subparse([$this, 'decideWithEnd'], true);
 
-        $stream->expect(Twig_Token::BLOCK_END_TYPE);
+        $stream->expect(Token::BLOCK_END_TYPE);
 
         return new InlineEditingNamespaceNode(
             ['body' => $body],
@@ -35,12 +36,12 @@ class InlineEditingNamespaceTokenParser extends \Twig_TokenParser
     }
 
     /**
-     * @param Twig_Token $token
+     * @param Token $token
      * @return bool
      */
-    public function decideWithEnd(Twig_Token $token): bool
+    public function decideWithEnd(Token $token): bool
     {
-        return $token->test(Twig_Token::NAME_TYPE, 'end_inline_namespace');
+        return $token->test(Token::NAME_TYPE, 'end_inline_namespace');
     }
 
     /**

@@ -3,18 +3,18 @@ declare(strict_types=1);
 
 namespace XcoreCMS\InlineEditingBundle\Twig;
 
-use Twig_Node;
-use Twig_Compiler;
+use Twig\Compiler;
+use Twig\Node\Node;
 
 /**
  * @author Jakub Janata <jakubjanata@gmail.com>
  */
-class InlineEditingNamespaceNode extends Twig_Node
+class InlineEditingNamespaceNode extends Node
 {
     /**
-     * @param Twig_Compiler $compiler
+     * @param Compiler $compiler
      */
-    public function compile(Twig_Compiler $compiler): void
+    public function compile(Compiler $compiler): void
     {
         $namespace = $this->getAttribute('namespace');
 

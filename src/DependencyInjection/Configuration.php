@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace XcoreCMS\InlineEditingBundle\DependencyInjection;
 
-use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -17,10 +16,14 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder();
+        $treeBuilder = new TreeBuilder('xcore_inline');
 
-        /** @var ArrayNodeDefinition $rootNode */
-        $rootNode = $treeBuilder->root('xcore_inline');
+        if (method_exists($treeBuilder, 'getRootNode')) {
+            $rootNode = $treeBuilder->getRootNode();
+        } else {
+            // BC layer for symfony/config 4.1 and older
+            $rootNode = $treeBuilder->root('xcore_inline');
+        }
 
         $children = $rootNode->children();
         $children->scalarNode('fallback')->defaultValue(false)->end();
