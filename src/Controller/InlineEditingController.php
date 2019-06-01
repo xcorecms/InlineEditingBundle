@@ -48,10 +48,7 @@ class InlineEditingController
     public function updateAction(Request $request): Response
     {
         /** @var CheckInlinePermissionEvent $event */
-        $event = $this->eventDispatcher->dispatch(
-            CheckInlinePermissionEvent::CHECK,
-            new CheckInlinePermissionEvent()
-        );
+        $event = $this->eventDispatcher->dispatch(new CheckInlinePermissionEvent());
 
         if ($event->isAllowed() === false) {
             return new JsonResponse([], 403);

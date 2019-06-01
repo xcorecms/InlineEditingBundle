@@ -11,11 +11,6 @@ use Symfony\Component\EventDispatcher\Event;
 class CheckInlinePermissionEvent extends Event
 {
     /**
-     * Event name (for dispatching)
-     */
-    public const CHECK = 'inline_permission_check';
-
-    /**
      * @var bool
      */
     private $editationAllowed;

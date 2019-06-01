@@ -28,6 +28,6 @@ abstract class AbstractInlineEnablerSubscriber implements EventSubscriberInterfa
      */
     public static function getSubscribedEvents(): array
     {
-        return [CheckInlinePermissionEvent::CHECK => 'checkPermission'];
+        return [CheckInlinePermissionEvent::class => 'checkPermission'];
     }
 }

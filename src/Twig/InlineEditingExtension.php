@@ -298,7 +298,7 @@ class InlineEditingExtension extends AbstractExtension
     {
         if ($this->editationAllowed === null) {
             /** @var CheckInlinePermissionEvent $event */
-            $event = $this->dispatcher->dispatch(CheckInlinePermissionEvent::CHECK, new CheckInlinePermissionEvent());
+            $event = $this->dispatcher->dispatch(new CheckInlinePermissionEvent());
             $this->editationAllowed = $event->isAllowed();
         }
 
