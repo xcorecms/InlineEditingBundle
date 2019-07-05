@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace XcoreCMS\InlineEditingBundle\Event;
 
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * @author Jakub Janata <jakubjanata@gmail.com>

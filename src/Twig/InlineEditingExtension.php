@@ -279,7 +279,7 @@ class InlineEditingExtension extends AbstractExtension
         $content = $this->contentProvider->getContent($namespace, $locale, $name);
 
         $attrs = $attr['attr'] ?? [];
-        $htmlAttrs = implode(' ', array_map(function ($v, $n) {
+        $htmlAttrs = implode(' ', array_map(static function ($v, $n) {
             return sprintf('%s="%s"', $n, $v);
         }, $attrs, array_keys($attrs)));
 
