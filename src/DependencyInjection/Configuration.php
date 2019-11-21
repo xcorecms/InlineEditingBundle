@@ -19,12 +19,7 @@ class Configuration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder('xcore_inline');
 
-        if (method_exists($treeBuilder, 'getRootNode')) {
-            $rootNode = $treeBuilder->getRootNode();
-        } else {
-            // BC layer for symfony/config 4.1 and older
-            $rootNode = $treeBuilder->root('xcore_inline');
-        }
+        $rootNode = $treeBuilder->getRootNode();
 
         $children = $rootNode->children();
         $children->scalarNode('fallback')->defaultValue(false)->end();
