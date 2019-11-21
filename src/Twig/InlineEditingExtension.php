@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace XcoreCMS\InlineEditingBundle\Twig;
@@ -114,8 +115,10 @@ class InlineEditingExtension extends AbstractExtension
         array $attr = [],
         bool $specific = true
     ): string {
-        if ($specific === false &&
-            !in_array($elementTag, ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'span', 'strong', 'div'], true)) {
+        if (
+            $specific === false &&
+            !in_array($elementTag, ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'span', 'strong', 'div'], true)
+        ) {
             throw new Error("This tag '$elementTag' isn't allowed");
         }
 
