@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace XcoreCMS\InlineEditingBundle\Twig;
 
-use Symfony\Component\PropertyAccess\PropertyAccessor;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Twig\Error\Error;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -18,6 +18,9 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class InlineEditingExtension extends AbstractExtension
 {
+    /** @var string */
+    private $defaultNamespace;
+
     /** @var ContentProvider */
     private $contentProvider;
 
@@ -27,25 +30,24 @@ class InlineEditingExtension extends AbstractExtension
     /** @var RouterInterface */
     private $router;
 
-    /** @var PropertyAccessor */
+    /** @var PropertyAccessorInterface */
     private $propertyAccessor;
 
     /** @var bool|null */
     private $editationAllowed;
 
-    /**
-     * @param ContentProvider $contentProvider
-     * @param EventDispatcherInterface $dispatcher
-     * @param RouterInterface $router
-     */
     public function __construct(
+        string $defaultNamespace,
         ContentProvider $contentProvider,
         EventDispatcherInterface $dispatcher,
-        RouterInterface $router
+        RouterInterface $router,
+        PropertyAccessorInterface $propertyAccessor
     ) {
+        $this->defaultNamespace = $defaultNamespace;
         $this->contentProvider = $contentProvider;
         $this->dispatcher = $dispatcher;
         $this->router = $router;
+        $this->propertyAccessor = $propertyAccessor;
     }
 
     /**
@@ -122,12 +124,10 @@ class InlineEditingExtension extends AbstractExtension
             throw new Error("This tag '$elementTag' isn't allowed");
         }
 
-        $accessor = $this->getPropertyAccessor();
-
         $type = $specific === true ? 'entity-specific' : 'entity';
         $class = get_class($entity);
-        $id = $accessor->getValue($entity, 'id');
-        $content = $accessor->getValue($entity, $property);
+        $id = $this->propertyAccessor->getValue($entity, 'id');
+        $content = $this->propertyAccessor->getValue($entity, $property);
 
         $attrs = $attr['attr'] ?? [];
         $htmlAttrs = implode(' ', array_map(static function ($v, $n) {
@@ -277,7 +277,7 @@ class InlineEditingExtension extends AbstractExtension
      */
     protected function getHtmlContent(array $context, string $elementTag, string $name, array $attr): string
     {
-        $namespace = $attr['namespace'] ?? $context['_inline_namespace'] ?? '';
+        $namespace = $attr['namespace'] ?? $context['_inline_namespace'] ?? $this->defaultNamespace;
         $locale = $attr['locale'] ?? $context['app']->getRequest()->getLocale() ?? '';
         $content = $this->contentProvider->getContent($namespace, $locale, $name);
 
@@ -306,13 +306,5 @@ class InlineEditingExtension extends AbstractExtension
         }
 
         return $this->editationAllowed;
-    }
-
-    /**
-     * @return PropertyAccessor
-     */
-    private function getPropertyAccessor(): PropertyAccessor
-    {
-        return $this->propertyAccessor = $this->propertyAccessor ?? new PropertyAccessor();
     }
 }

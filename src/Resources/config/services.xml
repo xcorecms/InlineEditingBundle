@@ -21,11 +21,9 @@
             <argument type="service" id="validator"/>
         </service>
 
-        <service id="XcoreCMS\InlineEditingBundle\Twig\InlineEditingExtension" public="true">
+        <service id="XcoreCMS\InlineEditingBundle\Twig\InlineEditingExtension" public="true" autowire="true">
             <tag name="twig.extension"/>
-            <argument type="service" id="XcoreCMS\InlineEditing\Model\Simple\ContentProvider"/>
-            <argument type="service" id="event_dispatcher"/>
-            <argument type="service" id="router"/>
+            <argument key="$defaultNamespace">%xcore_inline.default_namespace%</argument>
         </service>
 
         <service id="XcoreCMS\InlineEditingBundle\Controller\InlineEditingController" autowire="true">

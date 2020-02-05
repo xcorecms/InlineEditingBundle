@@ -28,6 +28,7 @@ class XcoreCMSInlineEditingExtension extends Extension
         $container->setParameter('xcore_inline.url_path', $config['url_path']);
         $container->setParameter('xcore_inline.connection', $config['connection']);
         $container->setParameter('xcore_inline.entity_manager', $config['entity_manager']);
+        $container->setParameter('xcore_inline.default_namespace', $config['default_namespace']);
 
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
