@@ -92,7 +92,7 @@ class InlineEditingExtension extends AbstractExtension
     /**
      * @param mixed $entity
      * @param string $property
-     * @param array $attr
+     * @param array<mixed> $attr
      * @return string
      */
     public function editableEntity($entity, string $property, array $attr = []): string
@@ -105,7 +105,7 @@ class InlineEditingExtension extends AbstractExtension
      * @param string $elementTag
      * @param mixed $entity
      * @param string $property
-     * @param array $attr
+     * @param array<mixed> $attr
      * @param bool $specific
      * @return string
      * @throws Error
@@ -146,7 +146,7 @@ class InlineEditingExtension extends AbstractExtension
     /**
      * @param mixed $entity
      * @param string $property
-     * @param array $attr
+     * @param array<mixed> $attr
      * @return string
      */
     public function editableEntityHtml($entity, string $property, array $attr = []): string
@@ -158,7 +158,7 @@ class InlineEditingExtension extends AbstractExtension
      * @param string $elementTag
      * @param mixed $entity
      * @param string $property
-     * @param array $attr
+     * @param array<mixed> $attr
      * @return string
      */
     public function editableEntityHtmlDynamic(string $elementTag, $entity, string $property, array $attr = []): string
@@ -167,9 +167,9 @@ class InlineEditingExtension extends AbstractExtension
     }
 
     /**
-     * @param array $context
+     * @param array<mixed> $context
      * @param string $property
-     * @param array $attr
+     * @param array<mixed> $attr
      * @return string
      */
     public function editableEntityField(array $context, string $property, array $attr = []): string
@@ -178,10 +178,10 @@ class InlineEditingExtension extends AbstractExtension
     }
 
     /**
-     * @param array $context
+     * @param array<mixed> $context
      * @param string $elementTag
      * @param string $property
-     * @param array $attr
+     * @param array<mixed> $attr
      * @return string
      */
     public function editableEntityFieldDynamic(
@@ -194,9 +194,9 @@ class InlineEditingExtension extends AbstractExtension
     }
 
     /**
-     * @param array $context
+     * @param array<mixed> $context
      * @param string $property
-     * @param array $attr
+     * @param array<mixed> $attr
      * @return string
      */
     public function editableEntityHtmlField(array $context, string $property, array $attr = []): string
@@ -205,10 +205,10 @@ class InlineEditingExtension extends AbstractExtension
     }
 
     /**
-     * @param array $context
+     * @param array<mixed> $context
      * @param string $elementTag
      * @param string $property
-     * @param array $attr
+     * @param array<mixed> $attr
      * @return string
      */
     public function editableEntityHtmlFieldDynamic(
@@ -223,9 +223,9 @@ class InlineEditingExtension extends AbstractExtension
     /* ==== SIMPLE ==== */
 
     /**
-     * @param array $context
+     * @param array<mixed> $context
      * @param string $name
-     * @param array $attr
+     * @param array<mixed> $attr
      * @return string
      */
     public function editableItem(array $context, string $name, array $attr = []): string
@@ -234,10 +234,10 @@ class InlineEditingExtension extends AbstractExtension
     }
 
     /**
-     * @param array $context
+     * @param array<mixed> $context
      * @param string $elementTag
      * @param string $name
-     * @param array $attr
+     * @param array<mixed> $attr
      * @return string
      * @throws Error
      */
@@ -269,10 +269,10 @@ class InlineEditingExtension extends AbstractExtension
     }
 
     /**
-     * @param array $context
+     * @param array<mixed> $context
      * @param string $elementTag
      * @param string $name
-     * @param array $attr
+     * @param array<mixed> $attr
      * @return string
      */
     protected function getHtmlContent(array $context, string $elementTag, string $name, array $attr): string

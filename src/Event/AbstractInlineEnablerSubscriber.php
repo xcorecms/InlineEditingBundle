@@ -25,7 +25,7 @@ abstract class AbstractInlineEnablerSubscriber implements EventSubscriberInterfa
     }
 
     /**
-     * @return array
+     * @inheritDoc
      */
     public static function getSubscribedEvents(): array
     {

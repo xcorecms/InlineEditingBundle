@@ -14,7 +14,7 @@ class InlineEditingEntityTokenParser extends AbstractTokenParser
 {
     /**
      * @param Token $token
-     * @return InlineEditingEntityNode
+     * @return InlineEditingEntityNode<mixed>
      */
     public function parse(Token $token): InlineEditingEntityNode
     {

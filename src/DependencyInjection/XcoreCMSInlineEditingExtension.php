@@ -16,7 +16,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 class XcoreCMSInlineEditingExtension extends Extension
 {
     /**
-     * {@inheritdoc}
+     * @param array<mixed> $configs
      */
     public function load(array $configs, ContainerBuilder $container): void
     {

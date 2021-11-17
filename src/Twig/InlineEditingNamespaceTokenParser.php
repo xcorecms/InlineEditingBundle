@@ -14,7 +14,7 @@ class InlineEditingNamespaceTokenParser extends AbstractTokenParser
 {
     /**
      * @param Token $token
-     * @return InlineEditingNamespaceNode
+     * @return InlineEditingNamespaceNode<mixed>
      */
     public function parse(Token $token): InlineEditingNamespaceNode
     {

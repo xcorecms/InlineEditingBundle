@@ -77,7 +77,7 @@ class InlineEditingController
 
 
     /**
-     * @param array $item
+     * @param array<string, string> $item
      */
     protected function processSimple(array $item): void
     {
@@ -89,11 +89,15 @@ class InlineEditingController
     }
 
     /**
-     * @param array $item
+     * @param array<string, string> $item
      */
     protected function processEntity(array $item): void
     {
         if (!isset($item['entity'], $item['id'], $item['property'], $item['content'])) {
+            return;
+        }
+
+        if (!class_exists($item['entity'])) {
             return;
         }
 
