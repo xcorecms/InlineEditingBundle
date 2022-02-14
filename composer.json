@@ -17,11 +17,11 @@
   "require": {
     "php": "^7.4 || ^8.0",
     "doctrine/orm": "^2.5",
-    "xcore/inline-editing": "^1.3",
-    "symfony/framework-bundle": "^5.0",
-    "symfony/expression-language": "^5.0",
-    "symfony/validator": "^5.0",
-    "symfony/property-access": "^5.0",
+    "xcore/inline-editing": "^1.4",
+    "symfony/framework-bundle": "^5.4 || ^6.0",
+    "symfony/expression-language": "^5.4 || ^6.0",
+    "symfony/validator": "^5.4 || ^6.0",
+    "symfony/property-access": "^5.4 || ^6.0",
     "twig/twig": "^3.0",
     "ext-json": "*"
   },
